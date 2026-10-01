@@ -52,7 +52,7 @@ The architecture is built on three core engineering tenets:
 
 To ensure the project is immediately runnable on any local developer workstation or evaluation machine without requiring Docker or a running PostgreSQL daemon, the database architecture uses **SQLAlchemy 2.0 with Dual-Dialect Support**:
 - **SQLite 3**: Default out-of-the-box local engine. Zero daemon, zero port conflicts, file-backed or in-memory, full support for foreign keys (`PRAGMA foreign_keys = ON`), complex CTEs, window functions, and JSON storage.
-- **PostgreSQL**: Production engine. Activated seamlessly via environment variable `DATABASE_URL=postgresql://user:pass@localhost:5432/liquidity_twin`.
+- **PostgreSQL**: Production engine. Configured via environment variable `DATABASE_URL=postgresql://user:pass@localhost:5432/liquidity_twin`.
 
 ### Decimal Arithmetic Standard
 All monetary and balance fields are mapped to `Numeric(24, 4)` and handled in Python as `decimal.Decimal` with explicit rounding modes (`ROUND_HALF_EVEN`).
