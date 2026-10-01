@@ -1,18 +1,17 @@
 import json
-import pytest
 from decimal import Decimal
+
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.core.database import Base
-from backend.app.models.dimensions import DimAccount, DimCustomer, DimProduct, DimEntity
-from backend.app.models.regulatory import RegulatoryRule
-from backend.app.models.facts import FactReportingSnapshot, FactBalanceSheet, FactOffBalanceExposure
-from backend.app.calculators.classifier import RegulatoryClassifier
 from backend.app.calculators.asf import AsfCalculationEngine
-from backend.app.calculators.rsf import RsfCalculationEngine
+from backend.app.calculators.classifier import RegulatoryClassifier
 from backend.app.calculators.nsfr import NsfrCalculationEngine
-from backend.app.calculators.lcr import LcrCalculationEngine
+from backend.app.calculators.rsf import RsfCalculationEngine
+from backend.app.core.database import Base
+from backend.app.models.dimensions import DimAccount, DimProduct
+from backend.app.models.facts import FactBalanceSheet, FactOffBalanceExposure, FactReportingSnapshot
 from backend.app.services.generator import SyntheticBankGenerator
 
 
@@ -68,7 +67,7 @@ def test_golden_dataset_nsfr_and_lcr_assertions(in_memory_db):
       Total RSF == $42,000,000.00
       NSFR == 118.3333%
     """
-    with open("data/golden/golden_dataset.json", "r") as f:
+    with open("data/golden/golden_dataset.json") as f:
         golden = json.load(f)
 
     gen = SyntheticBankGenerator(in_memory_db, seed=42)

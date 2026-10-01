@@ -1,13 +1,18 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Dict, List, Any, Optional
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from backend.app.models.workflow import CloseCycle, CloseStep, AdjustmentEvent, AuditLog
-from backend.app.models.facts import FactReportingSnapshot, FactBalanceSheet, FactControlResult, FactException
-from backend.app.controls.engine import ControlEngine
-from backend.app.calculators.nsfr import NsfrCalculationEngine
 from backend.app.calculators.lcr import LcrCalculationEngine
+from backend.app.calculators.nsfr import NsfrCalculationEngine
+from backend.app.models.facts import (
+    FactBalanceSheet,
+    FactControlResult,
+    FactException,
+    FactReportingSnapshot,
+)
+from backend.app.models.workflow import AdjustmentEvent, CloseCycle, CloseStep
 
 
 class ShadowCloseWorkflowEngine:
@@ -41,7 +46,7 @@ class ShadowCloseWorkflowEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_close_status(self, period: str = "2026-Q3") -> Dict[str, Any]:
+    def get_close_status(self, period: str = "2026-Q3") -> dict[str, Any]:
         cycle = self.db.query(CloseCycle).filter_by(period=period).first()
         if not cycle:
             return {"period": period, "status": "NOT_STARTED", "steps": []}
@@ -68,7 +73,7 @@ class ShadowCloseWorkflowEngine:
             ]
         }
 
-    def advance_step(self, period: str, step_number: int, actor_role: str = "Controller") -> Dict[str, Any]:
+    def advance_step(self, period: str, step_number: int, actor_role: str = "Controller") -> dict[str, Any]:
         cycle = self.db.query(CloseCycle).filter_by(period=period).first()
         if not cycle:
             raise KeyError(f"Close cycle for period '{period}' not found.")
@@ -102,7 +107,7 @@ class ShadowCloseWorkflowEngine:
         adjustment_amount_usd: float = 38000000.0,
         rationale: str = "Late-clearing corporate wholesale funding wire discover post-freeze cutoff.",
         actor_role: str = "Lead Controller",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Acceptance Test 4: Injects a $38M late balance-sheet adjustment post-freeze:
           1. Detects reconciliation break (Assets != Liabilities)

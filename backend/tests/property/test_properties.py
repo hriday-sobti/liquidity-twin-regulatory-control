@@ -1,4 +1,5 @@
 from decimal import Decimal
+
 import hypothesis.strategies as st
 from hypothesis import given, settings
 

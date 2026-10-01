@@ -1,6 +1,7 @@
-from decimal import Decimal, ROUND_HALF_EVEN
 from datetime import datetime
-from typing import Dict, Any, Optional
+from decimal import ROUND_HALF_EVEN, Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
 from backend.app.calculators.asf import AsfCalculationEngine
@@ -19,7 +20,7 @@ class NsfrCalculationEngine:
         self.asf_engine = AsfCalculationEngine(db)
         self.rsf_engine = RsfCalculationEngine(db)
 
-    def calculate_nsfr(self, snapshot_id: str, persist: bool = False) -> Dict[str, Any]:
+    def calculate_nsfr(self, snapshot_id: str, persist: bool = False) -> dict[str, Any]:
         asf_res = self.asf_engine.calculate_asf(snapshot_id)
         rsf_res = self.rsf_engine.calculate_rsf(snapshot_id)
 

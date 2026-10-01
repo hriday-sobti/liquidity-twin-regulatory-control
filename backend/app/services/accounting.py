@@ -1,10 +1,10 @@
-from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Dict, List, Any, Tuple
+from decimal import Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
 from backend.app.models.dimensions import DimAccount, DimProduct
-from backend.app.models.facts import FactBalanceSheet, FactEvent, FactReportingSnapshot
+from backend.app.models.facts import FactBalanceSheet
 
 
 class AccountingRollupService:
@@ -18,7 +18,7 @@ class AccountingRollupService:
     def __init__(self, db: Session):
         self.db = db
 
-    def verify_roll_forward(self, snapshot_id: str) -> Tuple[bool, List[Dict[str, Any]]]:
+    def verify_roll_forward(self, snapshot_id: str) -> tuple[bool, list[dict[str, Any]]]:
         """
         Validates that for all balance sheet rows in the snapshot:
         closing_balance == opening_balance + movement_amount
@@ -39,7 +39,7 @@ class AccountingRollupService:
                 })
         return len(breaks) == 0, breaks
 
-    def verify_balance_sheet_identity(self, snapshot_id: str) -> Dict[str, Any]:
+    def verify_balance_sheet_identity(self, snapshot_id: str) -> dict[str, Any]:
         """
         Validates that Assets == Liabilities + Equity within $0.00 tolerance.
         """
@@ -83,7 +83,7 @@ class AccountingRollupService:
             "status": "PASS" if is_balanced else "FAIL",
         }
 
-    def reconcile_gl_to_subledger(self, snapshot_id: str) -> Dict[str, Any]:
+    def reconcile_gl_to_subledger(self, snapshot_id: str) -> dict[str, Any]:
         """
         Reconciles transactional event movements against balance-sheet movements.
         """

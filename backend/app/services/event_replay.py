@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import asc
+from datetime import datetime
+from typing import Any
 
-from backend.app.models.facts import FactEvent, FactReportingSnapshot, FactBalanceSheet
-from backend.app.models.dimensions import DimAccount, DimProduct
+from sqlalchemy import asc
+from sqlalchemy.orm import Session
+
+from backend.app.models.dimensions import DimAccount
+from backend.app.models.facts import FactEvent, FactReportingSnapshot
 
 
 class EventReplayService:
@@ -22,7 +23,7 @@ class EventReplayService:
         self,
         snapshot_id: str,
         limit: int = 40,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         snap = self.db.query(FactReportingSnapshot).filter_by(snapshot_id=snapshot_id).first()
         bdate = snap.business_date if snap else datetime(2026, 9, 30).date()
 

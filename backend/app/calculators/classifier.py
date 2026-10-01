@@ -1,9 +1,8 @@
-from datetime import date
 from decimal import Decimal
-from typing import Optional, Dict, Any, List
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from backend.app.models.dimensions import DimAccount, DimProduct, DimCustomer
 from backend.app.models.regulatory import RegulatoryRule
 
 
@@ -28,7 +27,7 @@ class ClassificationResult:
         self.source_reference = source_reference
         self.methodology_note = methodology_note
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "rule_id": self.rule_id,
             "rule_version": self.rule_version,
@@ -49,7 +48,7 @@ class RegulatoryClassifier:
 
     def __init__(self, db: Session):
         self.db = db
-        self.rules: List[RegulatoryRule] = db.query(RegulatoryRule).filter_by(active=True).all()
+        self.rules: list[RegulatoryRule] = db.query(RegulatoryRule).filter_by(active=True).all()
 
     def classify_position(
         self,
@@ -61,11 +60,11 @@ class RegulatoryClassifier:
         is_operational: bool = False,
         is_encumbered: bool = False,
         risk_weight: float = 100.0,
-    ) -> Dict[str, ClassificationResult]:
+    ) -> dict[str, ClassificationResult]:
         """
         Returns classifications for both NSFR and LCR frameworks.
         """
-        results: Dict[str, ClassificationResult] = {}
+        results: dict[str, ClassificationResult] = {}
         
         # 1. Available Stable Funding (ASF) for liabilities & equity
         if side in ("LIABILITY", "EQUITY"):
@@ -110,7 +109,7 @@ class RegulatoryClassifier:
         tenor: int,
         is_insured: bool,
         is_operational: bool,
-    ) -> Optional[RegulatoryRule]:
+    ) -> RegulatoryRule | None:
         # Capital & Long-Term Liabilities (>= 1Y)
         if tenor >= 365 or product_code in ("EQUITY_CET1", "TIER2_SUB_DEBT", "SR_TERM_NOTES"):
             return self._find_rule("RULE-ASF-01")
@@ -145,7 +144,7 @@ class RegulatoryClassifier:
         tenor: int,
         is_encumbered: bool,
         risk_weight: float,
-    ) -> Optional[RegulatoryRule]:
+    ) -> RegulatoryRule | None:
         if is_encumbered or product_code == "PREMISES_NPL":
             return self._find_rule("RULE-RSF-08")
 
@@ -178,7 +177,7 @@ class RegulatoryClassifier:
 
         return self._find_rule("RULE-RSF-08")
 
-    def _find_rule(self, rule_id: str) -> Optional[RegulatoryRule]:
+    def _find_rule(self, rule_id: str) -> RegulatoryRule | None:
         for r in self.rules:
             if r.rule_id == rule_id:
                 return r

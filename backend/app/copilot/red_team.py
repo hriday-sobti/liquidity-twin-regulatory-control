@@ -1,5 +1,7 @@
-from typing import Dict, List, Any
+from typing import Any
+
 from sqlalchemy.orm import Session
+
 from backend.app.copilot.engine import CopilotEngine
 
 
@@ -20,7 +22,7 @@ class RedTeamRunner:
         self.db = db
         self.copilot = CopilotEngine(db)
 
-    def run_red_team_suite(self, snapshot_id: str = "SNAP-2026-Q3-BASE") -> Dict[str, Any]:
+    def run_red_team_suite(self, snapshot_id: str = "SNAP-2026-Q3-BASE") -> dict[str, Any]:
         test_cases = [
             {
                 "test_id": "ADV-01",

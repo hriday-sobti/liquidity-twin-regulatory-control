@@ -1,9 +1,10 @@
-from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Dict, List, Any
+from decimal import Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
+from backend.app.models.dimensions import DimAccount
 from backend.app.models.facts import FactBalanceSheet, FactOffBalanceExposure
-from backend.app.models.dimensions import DimAccount, DimProduct
 
 
 class RsfCalculationEngine:
@@ -15,11 +16,11 @@ class RsfCalculationEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    def calculate_rsf(self, snapshot_id: str) -> Dict[str, Any]:
+    def calculate_rsf(self, snapshot_id: str) -> dict[str, Any]:
         balances = self.db.query(FactBalanceSheet).filter_by(snapshot_id=snapshot_id).all()
         obs_items = self.db.query(FactOffBalanceExposure).filter_by(snapshot_id=snapshot_id).all()
 
-        categories: Dict[str, Dict[str, Any]] = {
+        categories: dict[str, dict[str, Any]] = {
             "Cash & Central Bank Reserves (0%)": {"raw_amount": Decimal("0.0"), "rsf_amount": Decimal("0.0"), "factor": 0.00, "positions_count": 0},
             "Level 1 Sovereign Securities (5%)": {"raw_amount": Decimal("0.0"), "rsf_amount": Decimal("0.0"), "factor": 0.05, "positions_count": 0},
             "Loans to Financial Institutions Secured by L1 (10%)": {"raw_amount": Decimal("0.0"), "rsf_amount": Decimal("0.0"), "factor": 0.10, "positions_count": 0},

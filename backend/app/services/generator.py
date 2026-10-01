@@ -2,34 +2,30 @@ import json
 import os
 import random
 from datetime import date, datetime, timedelta
-from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Dict, List, Any
+from decimal import ROUND_HALF_EVEN, Decimal
 
 from sqlalchemy.orm import Session
+
 from backend.app.core.config import get_settings
 from backend.app.models.dimensions import (
-    DimDate,
-    DimEntity,
-    DimProduct,
-    DimCustomer,
     DimAccount,
     DimCurrency,
+    DimCustomer,
+    DimDate,
+    DimEntity,
     DimFundingType,
+    DimProduct,
     DimRegulatoryCategory,
     DimSecurity,
 )
-from backend.app.models.regulatory import RegulatoryRule
 from backend.app.models.facts import (
-    FactReportingSnapshot,
-    FactEvent,
     FactBalanceSheet,
-    FactDeposit,
-    FactLoan,
-    FactFunding,
-    FactSecurity,
+    FactEvent,
     FactOffBalanceExposure,
+    FactReportingSnapshot,
 )
-from backend.app.models.workflow import CloseCycle, CloseStep, AuditLog
+from backend.app.models.regulatory import RegulatoryRule
+from backend.app.models.workflow import AuditLog, CloseCycle, CloseStep
 
 settings = get_settings()
 
@@ -188,7 +184,7 @@ class SyntheticBankGenerator:
         if not os.path.exists(rules_path):
             return
 
-        with open(rules_path, "r", encoding="utf-8") as f:
+        with open(rules_path, encoding="utf-8") as f:
             rules_data = json.load(f)
 
         for r in rules_data:
@@ -276,7 +272,7 @@ class SyntheticBankGenerator:
                 self.db.add(ft)
         self.db.commit()
 
-    def seed_customers(self, count: int = 50) -> List[DimCustomer]:
+    def seed_customers(self, count: int = 50) -> list[DimCustomer]:
         existing = self.db.query(DimCustomer).all()
         if len(existing) >= count:
             return existing
@@ -319,10 +315,10 @@ class SyntheticBankGenerator:
         self.db.commit()
         return self.db.query(DimCustomer).all()
 
-    def seed_accounts(self, customers: List[DimCustomer]) -> Dict[str, DimAccount]:
+    def seed_accounts(self, customers: list[DimCustomer]) -> dict[str, DimAccount]:
         """Creates distinct accounts mapped to core products."""
         product_map = {p.product_code: p for p in self.db.query(DimProduct).all()}
-        accounts: Dict[str, DimAccount] = {}
+        accounts: dict[str, DimAccount] = {}
         
         # We ensure one master account per product code for clean calibration mapping
         for code, prod in product_map.items():
@@ -363,7 +359,7 @@ class SyntheticBankGenerator:
         return accounts
 
     def seed_calibrated_baseline_snapshot(
-        self, accounts: Dict[str, DimAccount], target_event_count: int = 1000
+        self, accounts: dict[str, DimAccount], target_event_count: int = 1000
     ) -> FactReportingSnapshot:
         """
         Calibrated balance-sheet specification designed to yield:
@@ -428,8 +424,8 @@ class SyntheticBankGenerator:
         self.db.add(snap)
         self.db.flush()
 
-        events: List[FactEvent] = []
-        fact_balances: List[FactBalanceSheet] = []
+        events: list[FactEvent] = []
+        fact_balances: list[FactBalanceSheet] = []
 
         total_asf = Decimal("0.0000")
         total_rsf = Decimal("0.0000")

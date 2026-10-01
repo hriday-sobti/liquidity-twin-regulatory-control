@@ -1,11 +1,12 @@
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from backend.app.models.facts import FactReportingSnapshot, FactControlResult, FactException
-from backend.app.scenarios.movement import MovementAnalyzer
-from backend.app.scenarios.engine import ScenarioLabEngine
-from backend.app.services.accounting import AccountingRollupService
 from backend.app.copilot.verifier import NumericVerifier
+from backend.app.models.facts import FactControlResult, FactException, FactReportingSnapshot
+from backend.app.scenarios.engine import ScenarioLabEngine
+from backend.app.scenarios.movement import MovementAnalyzer
+from backend.app.services.accounting import AccountingRollupService
 
 
 class CopilotEngine:
@@ -46,7 +47,7 @@ class CopilotEngine:
         self.scenario_engine = ScenarioLabEngine(db)
         self.accounting_service = AccountingRollupService(db)
 
-    def detect_intent(self, question: str) -> Tuple[str, Dict[str, Any]]:
+    def detect_intent(self, question: str) -> tuple[str, dict[str, Any]]:
         q = question.lower().strip()
 
         # Explicit rejection for out-of-scope queries
@@ -80,8 +81,8 @@ class CopilotEngine:
         self,
         question: str,
         snapshot_id: str = "SNAP-2026-Q3-BASE",
-        force_adversarial_error: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        force_adversarial_error: str | None = None,
+    ) -> dict[str, Any]:
         """
         Executes allowlisted query, produces grounding data, generates narrative,
         and applies mandatory numeric verification.
@@ -103,9 +104,9 @@ class CopilotEngine:
         if not snap:
             raise KeyError(f"Snapshot '{snapshot_id}' not found.")
 
-        grounding_data: Dict[str, Any] = {"snapshot_id": snapshot_id, "period": snap.period}
+        grounding_data: dict[str, Any] = {"snapshot_id": snapshot_id, "period": snap.period}
         raw_narrative = ""
-        claims: List[Dict[str, str]] = []
+        claims: list[dict[str, str]] = []
 
         # Intent Execution
         if intent == "NSFR_MOVEMENT":

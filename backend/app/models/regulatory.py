@@ -1,13 +1,15 @@
 from datetime import date
+
 from sqlalchemy import (
-    Column,
-    String,
     Boolean,
+    Column,
     Date,
-    Numeric,
-    Text,
     Index,
+    Numeric,
+    String,
+    Text,
 )
+
 from backend.app.core.database import Base
 
 

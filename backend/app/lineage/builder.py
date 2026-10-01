@@ -1,22 +1,19 @@
 import json
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Set
+from typing import Any
+
 import networkx as nx
 from sqlalchemy.orm import Session
 
+from backend.app.models.dimensions import DimAccount
 from backend.app.models.facts import (
     FactBalanceSheet,
-    FactOffBalanceExposure,
-    FactLiquidityMetric,
-    FactReportingSnapshot,
-    FactReportingLine,
-    FactEvent,
     FactControlResult,
+    FactEvent,
     FactException,
+    FactReportingSnapshot,
 )
-from backend.app.models.dimensions import DimAccount, DimProduct
-from backend.app.models.regulatory import RegulatoryRule
-from backend.app.models.lineage import LineageRun, LineageNode, LineageEdge
+from backend.app.models.lineage import LineageEdge, LineageNode, LineageRun
 
 
 class LineageGraphBuilder:
@@ -41,15 +38,14 @@ class LineageGraphBuilder:
 
         run_id = f"LIN-{snapshot_id}"
         balances = self.db.query(FactBalanceSheet).filter_by(snapshot_id=snapshot_id).all()
-        metrics = self.db.query(FactLiquidityMetric).filter_by(snapshot_id=snapshot_id).all()
         controls = self.db.query(FactControlResult).filter_by(snapshot_id=snapshot_id).all()
         exceptions = self.db.query(FactException).filter_by(snapshot_id=snapshot_id).all()
         events = self.db.query(FactEvent).filter_by(business_date=snap.business_date).limit(50).all()
 
-        db_nodes: List[LineageNode] = []
-        db_edges: List[LineageEdge] = []
+        db_nodes: list[LineageNode] = []
+        db_edges: list[LineageEdge] = []
 
-        def add_node(nid: str, ntype: str, label: str, entity_id: Optional[str] = None, props: Optional[Dict] = None):
+        def add_node(nid: str, ntype: str, label: str, entity_id: str | None = None, props: dict | None = None):
             props = props or {}
             G.add_node(nid, type=ntype, label=label, entity_id=entity_id, **props)
             if persist:
@@ -64,7 +60,7 @@ class LineageGraphBuilder:
                     )
                 )
 
-        def add_edge(src: str, tgt: str, etype: str, weight: Optional[float] = None):
+        def add_edge(src: str, tgt: str, etype: str, weight: float | None = None):
             if G.has_node(src) and G.has_node(tgt):
                 G.add_edge(src, tgt, type=etype, weight=weight)
                 if persist:
@@ -190,7 +186,7 @@ class LineageGraphBuilder:
 
         return G
 
-    def get_metric_birth_certificate(self, snapshot_id: str, metric_name: str = "NSFR") -> Dict[str, Any]:
+    def get_metric_birth_certificate(self, snapshot_id: str, metric_name: str = "NSFR") -> dict[str, Any]:
         """
         Backward traversal: Reconstructs the complete audit lineage for the metric down to source events.
         """
@@ -232,7 +228,7 @@ class LineageGraphBuilder:
             "is_acyclic": nx.is_directed_acyclic_graph(subgraph),
         }
 
-    def get_control_blast_radius(self, snapshot_id: str, control_id: str) -> Dict[str, Any]:
+    def get_control_blast_radius(self, snapshot_id: str, control_id: str) -> dict[str, Any]:
         """
         Forward traversal: Computes downstream impact and monetary blast-radius for a failed control.
         """
@@ -244,8 +240,8 @@ class LineageGraphBuilder:
         estimated_impact = float(exc.estimated_impact_usd) if exc and exc.estimated_impact_usd else 1200000.0
 
         impacted_nodes = []
-        affected_metrics: Set[str] = set()
-        affected_reports: Set[str] = set()
+        affected_metrics: set[str] = set()
+        affected_reports: set[str] = set()
 
         if G.has_node(ctrl_nid):
             descendants = nx.descendants(G, ctrl_nid)

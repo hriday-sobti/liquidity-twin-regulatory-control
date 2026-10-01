@@ -1,14 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Dict, List, Any, Optional
-import uuid
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from typing import Any
 
-from backend.app.models.facts import FactStakeholderQuery, FactReportingSnapshot, FactLiquidityMetric
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from backend.app.models.facts import (
+    FactStakeholderQuery,
+)
 from backend.app.models.workflow import AuditLog
-from backend.app.calculators.nsfr import NsfrCalculationEngine
-from backend.app.lineage.builder import LineageGraphBuilder
 
 
 class StakeholderQueryWorkbench:
@@ -23,11 +23,11 @@ class StakeholderQueryWorkbench:
     def __init__(self, db: Session):
         self.db = db
 
-    def list_queries(self) -> List[Dict[str, Any]]:
+    def list_queries(self) -> list[dict[str, Any]]:
         queries = self.db.query(FactStakeholderQuery).order_by(desc(FactStakeholderQuery.created_at)).all()
         return [self._to_dict(q) for q in queries]
 
-    def get_query_detail(self, query_id: str) -> Optional[Dict[str, Any]]:
+    def get_query_detail(self, query_id: str) -> dict[str, Any] | None:
         q = self.db.query(FactStakeholderQuery).filter_by(query_id=query_id).first()
         if not q:
             return None
@@ -84,7 +84,7 @@ class StakeholderQueryWorkbench:
         self.db.commit()
         return query
 
-    def resolve_query(self, query_id: str, resolution_notes: str, reviewer: str = "Lead Reviewer") -> Dict[str, Any]:
+    def resolve_query(self, query_id: str, resolution_notes: str, reviewer: str = "Lead Reviewer") -> dict[str, Any]:
         q = self.db.query(FactStakeholderQuery).filter_by(query_id=query_id).first()
         if not q:
             raise KeyError(f"Query '{query_id}' not found.")
@@ -109,7 +109,7 @@ class StakeholderQueryWorkbench:
         self.db.commit()
         return self._to_dict(q)
 
-    def _to_dict(self, q: FactStakeholderQuery) -> Dict[str, Any]:
+    def _to_dict(self, q: FactStakeholderQuery) -> dict[str, Any]:
         return {
             "query_id": q.query_id,
             "question": q.question,

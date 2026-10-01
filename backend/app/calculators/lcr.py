@@ -1,15 +1,16 @@
-from decimal import Decimal, ROUND_HALF_EVEN
 from datetime import datetime
-from typing import Dict, Any, List
+from decimal import ROUND_HALF_EVEN, Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
+from backend.app.models.dimensions import DimAccount
 from backend.app.models.facts import (
     FactBalanceSheet,
-    FactOffBalanceExposure,
     FactLiquidityMetric,
+    FactOffBalanceExposure,
     FactReportingSnapshot,
 )
-from backend.app.models.dimensions import DimAccount, DimProduct
 
 
 class LcrCalculationEngine:
@@ -22,7 +23,7 @@ class LcrCalculationEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    def calculate_lcr(self, snapshot_id: str, persist: bool = False) -> Dict[str, Any]:
+    def calculate_lcr(self, snapshot_id: str, persist: bool = False) -> dict[str, Any]:
         balances = self.db.query(FactBalanceSheet).filter_by(snapshot_id=snapshot_id).all()
         obs_items = self.db.query(FactOffBalanceExposure).filter_by(snapshot_id=snapshot_id).all()
 
@@ -32,7 +33,7 @@ class LcrCalculationEngine:
         level2b_gross = Decimal("0.0")
 
         # 2. Outflows
-        outflows: Dict[str, Dict[str, Any]] = {
+        outflows: dict[str, dict[str, Any]] = {
             "Stable Retail Deposits (5%)": {"raw": Decimal("0.0"), "rate": 0.05, "weighted": Decimal("0.0")},
             "Less Stable Retail Deposits (10%)": {"raw": Decimal("0.0"), "rate": 0.10, "weighted": Decimal("0.0")},
             "Operational Wholesale Deposits (25%)": {"raw": Decimal("0.0"), "rate": 0.25, "weighted": Decimal("0.0")},
@@ -42,7 +43,7 @@ class LcrCalculationEngine:
         }
 
         # 3. Inflows
-        inflows: Dict[str, Dict[str, Any]] = {
+        inflows: dict[str, dict[str, Any]] = {
             "Retail & Corporate Performing Loan Repayments (50%)": {"raw": Decimal("0.0"), "rate": 0.50, "weighted": Decimal("0.0")},
             "Financial Counterparty Inflows < 30D (100%)": {"raw": Decimal("0.0"), "rate": 1.00, "weighted": Decimal("0.0")},
         }

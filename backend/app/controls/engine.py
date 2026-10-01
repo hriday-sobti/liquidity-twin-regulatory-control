@@ -1,18 +1,17 @@
+import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import Dict, List, Any
-import uuid
+from typing import Any
 
 from sqlalchemy.orm import Session
+
 from backend.app.controls.catalog import CONTROL_DEFINITIONS
 from backend.app.models.facts import (
+    FactBalanceSheet,
     FactControlResult,
     FactException,
     FactReportingSnapshot,
-    FactBalanceSheet,
-    FactEvent,
 )
-from backend.app.models.dimensions import DimAccount, DimProduct
 from backend.app.services.accounting import AccountingRollupService
 
 
@@ -27,7 +26,7 @@ class ControlEngine:
         self.db = db
         self.accounting_service = AccountingRollupService(db)
 
-    def run_all_controls(self, snapshot_id: str) -> Dict[str, Any]:
+    def run_all_controls(self, snapshot_id: str) -> dict[str, Any]:
         """Executes all 100 controls and persists results in fact_control_result."""
         run_id = f"RUN-{snapshot_id}-{uuid.uuid4().hex[:8].upper()}"
         executed_at = datetime.utcnow()
@@ -38,8 +37,8 @@ class ControlEngine:
         balances = self.db.query(FactBalanceSheet).filter_by(snapshot_id=snapshot_id).all()
         snap = self.db.query(FactReportingSnapshot).filter_by(snapshot_id=snapshot_id).first()
 
-        results: List[FactControlResult] = []
-        exceptions: List[FactException] = []
+        results: list[FactControlResult] = []
+        exceptions: list[FactException] = []
 
         passed_count = 0
         failed_count = 0

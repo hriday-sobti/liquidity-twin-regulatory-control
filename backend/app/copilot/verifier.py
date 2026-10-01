@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any
 
 
 class NumericVerifier:
@@ -21,9 +21,9 @@ class NumericVerifier:
     def verify_narrative(
         self,
         generated_text: str,
-        grounding_data: Dict[str, Any],
-    ) -> Tuple[bool, List[Dict[str, Any]], str]:
-        violations: List[Dict[str, Any]] = []
+        grounding_data: dict[str, Any],
+    ) -> tuple[bool, list[dict[str, Any]], str]:
+        violations: list[dict[str, Any]] = []
 
         # 1. Check for SQL Injection patterns
         sql_keywords = ["SELECT ", "DROP ", "INSERT ", "UPDATE ", "DELETE ", "UNION ", "--", ";--"]
@@ -41,7 +41,7 @@ class NumericVerifier:
         found_pcts = [float(m) for m in pct_pattern.findall(generated_text)]
 
         # Collect valid percentages from grounding data
-        valid_pcts: List[float] = []
+        valid_pcts: list[float] = []
         if "metrics" in grounding_data:
             for mval in grounding_data["metrics"].values():
                 if isinstance(mval, (int, float)):

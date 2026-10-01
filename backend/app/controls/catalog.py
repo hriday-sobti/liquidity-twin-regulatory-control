@@ -1,10 +1,10 @@
-from typing import Dict, List, Any
+from typing import Any
 
 # Control catalog defining 100 automated controls across 10 families.
 # Each control defines:
 #   id, name, family, description, severity, frequency, expected_result
 
-CONTROL_DEFINITIONS: List[Dict[str, Any]] = [
+CONTROL_DEFINITIONS: list[dict[str, Any]] = [
     # =========================================================================
     # 1. ACCOUNTING CONTROLS (10)
     # =========================================================================

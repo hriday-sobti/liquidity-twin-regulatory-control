@@ -1,18 +1,16 @@
 import json
-from decimal import Decimal, ROUND_HALF_EVEN
-from datetime import datetime
-from typing import Dict, List, Any, Optional
 import uuid
+from datetime import datetime
+from decimal import ROUND_HALF_EVEN, Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
 from backend.app.models.facts import (
     FactReportingSnapshot,
-    FactBalanceSheet,
-    FactOffBalanceExposure,
     FactScenario,
     FactScenarioResult,
 )
-from backend.app.models.dimensions import DimAccount, DimProduct
 
 
 class ScenarioLabEngine:
@@ -41,7 +39,7 @@ class ScenarioLabEngine:
         wholesale_maturity_pct: float = 0.0,
         new_term_funding_usd: float = 0.0,
         asset_reallocation_usd: float = 0.0,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         base_snap = self.db.query(FactReportingSnapshot).filter_by(snapshot_id=base_snapshot_id).first()
         if not base_snap:
             raise KeyError(f"Base snapshot '{base_snapshot_id}' not found.")
@@ -58,7 +56,7 @@ class ScenarioLabEngine:
         delta_rsf = Decimal("0.0")
         delta_hqla = Decimal("0.0")
         delta_net_outflows = Decimal("0.0")
-        primary_drivers: List[str] = []
+        primary_drivers: list[str] = []
 
         # 1. Corporate deposit shock:
         # e.g. -8% on $225M corporate deposits = -$18M balance

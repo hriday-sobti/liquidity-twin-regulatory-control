@@ -1,9 +1,10 @@
-from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Dict, List, Any, Optional
+from decimal import ROUND_HALF_EVEN, Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from backend.app.models.facts import FactReportingSnapshot, FactBalanceSheet
-from backend.app.models.dimensions import DimAccount, DimProduct
+from backend.app.models.dimensions import DimAccount
+from backend.app.models.facts import FactBalanceSheet, FactReportingSnapshot
 
 
 class MovementAnalyzer:
@@ -29,8 +30,8 @@ class MovementAnalyzer:
     def analyze_movement(
         self,
         current_snapshot_id: str,
-        previous_snapshot_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        previous_snapshot_id: str | None = None,
+    ) -> dict[str, Any]:
         curr_snap = self.db.query(FactReportingSnapshot).filter_by(snapshot_id=current_snapshot_id).first()
         if not curr_snap:
             raise KeyError(f"Snapshot '{current_snapshot_id}' not found.")
@@ -66,11 +67,10 @@ class MovementAnalyzer:
         # Calculate previous ASF and RSF from opening balances
         prev_asf = Decimal("0.0")
         prev_rsf = Decimal("0.0")
-        curr_asf = curr_snap.asf_amount if curr_snap.asf_amount else Decimal("0.0")
         curr_rsf = curr_snap.rsf_amount if curr_snap.rsf_amount else Decimal("0.0")
 
         # Map per driver deltas
-        driver_deltas: Dict[str, Dict[str, Decimal]] = {
+        driver_deltas: dict[str, dict[str, Decimal]] = {
             "Corporate Deposits": {"delta_asf": Decimal("0.0"), "delta_rsf": Decimal("0.0"), "balance_change": Decimal("0.0")},
             "Wholesale Funding Maturity": {"delta_asf": Decimal("0.0"), "delta_rsf": Decimal("0.0"), "balance_change": Decimal("0.0")},
             "Loan Growth": {"delta_asf": Decimal("0.0"), "delta_rsf": Decimal("0.0"), "balance_change": Decimal("0.0")},
@@ -117,7 +117,7 @@ class MovementAnalyzer:
         # F(A, R) = A / R * 100
         # Contribution_i = [ (Delta_A_i / R_prev) - (A_prev * Delta_R_i / (R_prev * R_curr)) ] * 100
         drivers_list = []
-        raw_contributions: Dict[str, Decimal] = {}
+        raw_contributions: dict[str, Decimal] = {}
         sum_raw_contrib = Decimal("0.0")
 
         for dname, data in driver_deltas.items():

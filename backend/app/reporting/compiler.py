@@ -1,23 +1,22 @@
 import os
 from datetime import datetime
-from decimal import Decimal
-from typing import Dict, List, Any
+from typing import Any
+
 import openpyxl
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from sqlalchemy.orm import Session
 
+from backend.app.models.dimensions import DimAccount
 from backend.app.models.facts import (
-    FactReportingSnapshot,
     FactBalanceSheet,
-    FactLiquidityMetric,
     FactControlResult,
     FactException,
+    FactReportingSnapshot,
 )
-from backend.app.models.dimensions import DimAccount, DimProduct
 
 
 class ReportingCompiler:
@@ -36,7 +35,7 @@ class ReportingCompiler:
     def __init__(self, db: Session):
         self.db = db
 
-    def compile_reporting_pack(self, snapshot_id: str, output_dir: str = "reports/generated") -> Dict[str, Any]:
+    def compile_reporting_pack(self, snapshot_id: str, output_dir: str = "reports/generated") -> dict[str, Any]:
         os.makedirs(output_dir, exist_ok=True)
         snap = self.db.query(FactReportingSnapshot).filter_by(snapshot_id=snapshot_id).first()
         if not snap:
@@ -78,7 +77,7 @@ class ReportingCompiler:
             "compiled_at": datetime.utcnow().isoformat(),
         }
 
-    def _generate_pdf(self, path: str, snap: FactReportingSnapshot, balances: List[FactBalanceSheet], controls: List[FactControlResult], exceptions: List[FactException]):
+    def _generate_pdf(self, path: str, snap: FactReportingSnapshot, balances: list[FactBalanceSheet], controls: list[FactControlResult], exceptions: list[FactException]):
         doc = SimpleDocTemplate(path, pagesize=letter, leftMargin=36, rightMargin=36, topMargin=36, bottomMargin=36)
         styles = getSampleStyleSheet()
         
@@ -107,13 +106,6 @@ class ReportingCompiler:
             textColor=colors.HexColor("#20262E"),
             spaceBefore=12,
             spaceAfter=6,
-        )
-        body_style = ParagraphStyle(
-            "Body",
-            parent=styles["Normal"],
-            fontSize=9,
-            leading=12,
-            textColor=colors.HexColor("#20262E"),
         )
 
         elements = []
@@ -216,7 +208,7 @@ class ReportingCompiler:
 
         doc.build(elements)
 
-    def _generate_xlsx(self, path: str, snap: FactReportingSnapshot, balances: List[FactBalanceSheet], controls: List[FactControlResult], exceptions: List[FactException]):
+    def _generate_xlsx(self, path: str, snap: FactReportingSnapshot, balances: list[FactBalanceSheet], controls: list[FactControlResult], exceptions: list[FactException]):
         wb = openpyxl.Workbook()
         
         # Styles

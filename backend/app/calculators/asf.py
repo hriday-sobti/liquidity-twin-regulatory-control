@@ -1,9 +1,10 @@
-from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Dict, List, Any
+from decimal import Decimal
+from typing import Any
+
 from sqlalchemy.orm import Session
 
-from backend.app.models.facts import FactBalanceSheet, FactReportingSnapshot
-from backend.app.models.dimensions import DimAccount, DimProduct
+from backend.app.models.dimensions import DimAccount
+from backend.app.models.facts import FactBalanceSheet
 
 
 class AsfCalculationEngine:
@@ -15,11 +16,11 @@ class AsfCalculationEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    def calculate_asf(self, snapshot_id: str) -> Dict[str, Any]:
+    def calculate_asf(self, snapshot_id: str) -> dict[str, Any]:
         balances = self.db.query(FactBalanceSheet).filter_by(snapshot_id=snapshot_id).all()
         
         # Aggregate by high-level Basel category
-        categories: Dict[str, Dict[str, Any]] = {
+        categories: dict[str, dict[str, Any]] = {
             "Capital & Qualifying Liabilities >= 1Y": {"raw_amount": Decimal("0.0"), "asf_amount": Decimal("0.0"), "factor": 1.00, "positions_count": 0},
             "Stable Retail Deposits": {"raw_amount": Decimal("0.0"), "asf_amount": Decimal("0.0"), "factor": 0.95, "positions_count": 0},
             "Less Stable Retail Deposits": {"raw_amount": Decimal("0.0"), "asf_amount": Decimal("0.0"), "factor": 0.90, "positions_count": 0},

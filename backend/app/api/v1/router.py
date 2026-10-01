@@ -1,25 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Body
-from sqlalchemy.orm import Session
-from typing import Dict, Any, Optional
+from typing import Any
 
-from backend.app.core.database import get_db
-from backend.app.models.facts import FactReportingSnapshot, FactControlResult, FactException
-from backend.app.calculators.asf import AsfCalculationEngine
-from backend.app.calculators.rsf import RsfCalculationEngine
-from backend.app.calculators.nsfr import NsfrCalculationEngine
+from fastapi import APIRouter, Body, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from backend.app.calculators.lcr import LcrCalculationEngine
-from backend.app.scenarios.movement import MovementAnalyzer
-from backend.app.scenarios.engine import ScenarioLabEngine
-from backend.app.lineage.builder import LineageGraphBuilder
+from backend.app.calculators.nsfr import NsfrCalculationEngine
 from backend.app.controls.engine import ControlEngine
 from backend.app.controls.exceptions import ExceptionManagementService
-from backend.app.controls.catalog import CONTROL_DEFINITIONS
-from backend.app.reporting.compiler import ReportingCompiler
-from backend.app.services.close_workflow import ShadowCloseWorkflowEngine
-from backend.app.services.query_workbench import StakeholderQueryWorkbench
-from backend.app.services.event_replay import EventReplayService
 from backend.app.copilot.engine import CopilotEngine
 from backend.app.copilot.red_team import RedTeamRunner
+from backend.app.core.database import get_db
+from backend.app.lineage.builder import LineageGraphBuilder
+from backend.app.models.facts import FactControlResult, FactReportingSnapshot
+from backend.app.reporting.compiler import ReportingCompiler
+from backend.app.scenarios.engine import ScenarioLabEngine
+from backend.app.scenarios.movement import MovementAnalyzer
+from backend.app.services.close_workflow import ShadowCloseWorkflowEngine
+from backend.app.services.event_replay import EventReplayService
+from backend.app.services.query_workbench import StakeholderQueryWorkbench
 
 router = APIRouter()
 
@@ -89,7 +87,7 @@ def get_movements(snapshot_id: str = "SNAP-2026-Q3-BASE", db: Session = Depends(
 
 @router.post("/scenarios/run")
 def run_scenario(
-    body: Dict[str, Any] = Body(...),
+    body: dict[str, Any] = Body(...),
     db: Session = Depends(get_db),
 ):
     lab = ScenarioLabEngine(db)
@@ -161,7 +159,7 @@ def get_exception_detail(exception_id: str, db: Session = Depends(get_db)):
 @router.post("/exceptions/{exception_id}/update")
 def update_exception(
     exception_id: str,
-    body: Dict[str, Any] = Body(...),
+    body: dict[str, Any] = Body(...),
     db: Session = Depends(get_db),
 ):
     svc = ExceptionManagementService(db)
@@ -181,7 +179,7 @@ def get_close_status(period: str = "2026-Q3", db: Session = Depends(get_db)):
 
 @router.post("/close/advance")
 def advance_close_step(
-    body: Dict[str, Any] = Body(...),
+    body: dict[str, Any] = Body(...),
     db: Session = Depends(get_db),
 ):
     engine = ShadowCloseWorkflowEngine(db)
@@ -194,7 +192,7 @@ def advance_close_step(
 
 @router.post("/close/late-adjustment")
 def inject_late_adjustment(
-    body: Dict[str, Any] = Body(...),
+    body: dict[str, Any] = Body(...),
     db: Session = Depends(get_db),
 ):
     engine = ShadowCloseWorkflowEngine(db)
@@ -236,7 +234,7 @@ def get_event_replay(snapshot_id: str = "SNAP-2026-Q3-BASE", limit: int = 40, db
 
 @router.post("/copilot/ask")
 def copilot_ask(
-    body: Dict[str, Any] = Body(...),
+    body: dict[str, Any] = Body(...),
     db: Session = Depends(get_db),
 ):
     copilot = CopilotEngine(db)

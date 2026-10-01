@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from typing import Any
 
-from backend.app.models.facts import FactException, FactReportingSnapshot, FactControlResult
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from backend.app.models.facts import FactControlResult, FactException, FactReportingSnapshot
 from backend.app.models.workflow import AuditLog
 
 
@@ -28,11 +29,11 @@ class ExceptionManagementService:
 
     def list_exceptions(
         self,
-        snapshot_id: Optional[str] = None,
-        severity: Optional[str] = None,
-        status: Optional[str] = None,
-        affected_metric: Optional[str] = None,
-    ) -> List[Dict[str, Any]]:
+        snapshot_id: str | None = None,
+        severity: str | None = None,
+        status: str | None = None,
+        affected_metric: str | None = None,
+    ) -> list[dict[str, Any]]:
         query = self.db.query(FactException)
         if snapshot_id:
             query = query.filter(FactException.snapshot_id == snapshot_id)
@@ -46,7 +47,7 @@ class ExceptionManagementService:
         exceptions = query.order_by(desc(FactException.detected_at)).all()
         return [self._to_dict(e) for e in exceptions]
 
-    def get_exception_detail(self, exception_id: str) -> Optional[Dict[str, Any]]:
+    def get_exception_detail(self, exception_id: str) -> dict[str, Any] | None:
         exc = self.db.query(FactException).filter_by(exception_id=exception_id).first()
         if not exc:
             return None
@@ -76,9 +77,9 @@ class ExceptionManagementService:
         self,
         exception_id: str,
         new_status: str,
-        resolution_notes: Optional[str] = None,
+        resolution_notes: str | None = None,
         actor_role: str = "Analyst",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         if new_status not in self.VALID_STATUSES:
             raise ValueError(f"Invalid exception status '{new_status}'. Must be one of {self.VALID_STATUSES}")
 
@@ -121,7 +122,7 @@ class ExceptionManagementService:
         self.db.commit()
         return self._to_dict(exc)
 
-    def _to_dict(self, e: FactException) -> Dict[str, Any]:
+    def _to_dict(self, e: FactException) -> dict[str, Any]:
         return {
             "exception_id": e.exception_id,
             "control_id": e.control_id,

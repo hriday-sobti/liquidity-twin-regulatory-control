@@ -2,11 +2,11 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.core.database import Base
-from backend.app.models import *
-from backend.app.services.generator import SyntheticBankGenerator
 from backend.app.controls.catalog import CONTROL_DEFINITIONS
 from backend.app.controls.engine import ControlEngine
+from backend.app.core.database import Base
+from backend.app.models.facts import FactControlResult
+from backend.app.services.generator import SyntheticBankGenerator
 
 
 @pytest.fixture(scope="module")

@@ -1,12 +1,12 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 import os
 
-from backend.app.core.config import get_settings
-from backend.app.core.database import Base, engine, SessionLocal
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
 from backend.app.api.v1.router import router as api_v1_router
+from backend.app.core.config import get_settings
+from backend.app.core.database import Base, SessionLocal, engine
 from backend.app.services.generator import SyntheticBankGenerator
 
 settings = get_settings()
