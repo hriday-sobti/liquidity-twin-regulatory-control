@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send, Bot, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Send, MessageSquareText, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { askCopilot } from '../services/api';
 
 interface CopilotPanelProps {
@@ -100,7 +100,7 @@ export default function CopilotPanel({
       <div className="bg-surface p-4 rounded-lg border border-border flex justify-between items-center">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded bg-accent text-white flex items-center justify-center">
-            <Bot className="w-5 h-5" />
+            <MessageSquareText className="w-5 h-5" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-text">CONTROLLED LIQUIDITY ANALYST COPILOT</h1>

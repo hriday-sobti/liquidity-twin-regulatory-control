@@ -7,7 +7,7 @@ import {
   ShieldAlert,
   FileSpreadsheet,
   HelpCircle,
-  Bot,
+  MessageSquareText,
   History,
   Layers,
 } from 'lucide-react';
@@ -35,7 +35,7 @@ export default function Sidebar({
     { key: 'controls', label: 'Controls Catalog', icon: ShieldAlert, badge: `${controlScore}%` },
     { key: 'reporting', label: 'Reporting Packs', icon: FileSpreadsheet },
     { key: 'queries', label: 'Query Workbench', icon: HelpCircle },
-    { key: 'copilot', label: 'Analyst Copilot', icon: Bot, badge: 'VERIFIED' },
+    { key: 'copilot', label: 'Analyst Copilot', icon: MessageSquareText, badge: 'VERIFIED' },
     { key: 'replay', label: 'Event Replay', icon: History },
     { key: 'benchmark', label: 'Public Benchmark', icon: Layers },
   ];
