@@ -15,6 +15,7 @@ def run_smoke_verification():
 
     # 1. Database & Seeding
     print("[1/6] Verifying database schema & deterministic seeding...")
+    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     gen = SyntheticBankGenerator(db, seed=42)
     snap = gen.seed_all()
