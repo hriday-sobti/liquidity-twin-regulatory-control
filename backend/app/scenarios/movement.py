@@ -135,25 +135,28 @@ class MovementAnalyzer:
         # Reconcile residual discrepancy so sum == total_delta_nsfr exactly
         residual = total_delta_nsfr - sum_raw_contrib
 
-        for dname, data in driver_deltas.items():
-            base_c = raw_contributions[dname]
-            # Distribute tiny residual proportionally
-            if sum_raw_contrib != 0:
-                adjusted_c = base_c + (residual * (abs(base_c) / abs(sum_raw_contrib)))
-            else:
-                adjusted_c = base_c
+        items = list(driver_deltas.items())
+        running_sum = Decimal("0.0")
 
-            adjusted_c_quant = adjusted_c.quantize(Decimal("0.0001"), rounding=ROUND_HALF_EVEN)
-            
+        for idx, (dname, data) in enumerate(items):
+            base_c = raw_contributions[dname]
+            if idx == len(items) - 1:
+                # Plug last item so sum equals total_delta_nsfr exactly
+                adjusted_c = total_delta_nsfr - running_sum
+            else:
+                sum_abs = sum(abs(v) for v in raw_contributions.values())
+                weight = (abs(base_c) / sum_abs) if sum_abs > 0 else (Decimal("1.0") / len(items))
+                adjusted_c = (base_c + residual * weight).quantize(Decimal("0.0001"), rounding=ROUND_HALF_EVEN)
+                running_sum += adjusted_c
+
             drivers_list.append({
                 "driver_name": dname,
-                "contribution_pp": float(adjusted_c_quant),
+                "contribution_pp": float(adjusted_c),
                 "balance_movement_usd": float(data["balance_change"]),
                 "delta_asf_usd": float(data["delta_asf"]),
                 "delta_rsf_usd": float(data["delta_rsf"]),
-                "impact_direction": "NEGATIVE" if adjusted_c_quant < 0 else "POSITIVE",
+                "impact_direction": "NEGATIVE" if adjusted_c < 0 else "POSITIVE",
             })
-
         # Sort by absolute impact descending
         drivers_list.sort(key=lambda x: abs(x["contribution_pp"]), reverse=True)
 

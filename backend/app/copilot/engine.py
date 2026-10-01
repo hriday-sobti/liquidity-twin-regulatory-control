@@ -176,7 +176,11 @@ class CopilotEngine:
 
         # Adversarial Test Injection (for AI Red-Teaming Demonstration)
         if force_adversarial_error == "INVENTED_NUMBER":
-            raw_narrative = raw_narrative.replace("117.64%", "119.60%").replace("117.6%", "119.6%")
+            # Injects a clearly fabricated, out-of-bounds percentage (e.g. 149.99%) into the narrative
+            curr_str = f"{float(snap.nsfr_value):.2f}%" if snap and snap.nsfr_value else "117.64%"
+            raw_narrative = raw_narrative.replace(curr_str, "149.99%")
+            if "149.99%" not in raw_narrative:
+                raw_narrative += " Reported ratio verified at 149.99%."
         elif force_adversarial_error == "INVERTED_SIGN":
             raw_narrative = raw_narrative.replace("increased", "fell").replace("rose", "decreased")
         elif force_adversarial_error == "SQL_INJECTION":
