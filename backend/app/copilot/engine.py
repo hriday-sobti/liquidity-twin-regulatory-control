@@ -51,7 +51,7 @@ class CopilotEngine:
         q = question.lower().strip()
 
         # Explicit rejection for out-of-scope queries
-        if any(word in q for word in ["stock", "price", "predict", "forecast", "crypto", "sentiment", "salary", "hiring"]):
+        if any(word in q for word in ["stock", "price", "predict", "forecast", "crypto", "sentiment", "commodity"]):
             return "UNSUPPORTED", {}
 
         if "nsfr" in q:
