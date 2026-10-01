@@ -1,11 +1,19 @@
 # LIQUIDITY TWIN
 ## Regulatory Liquidity Digital Twin, Control Graph and Reporting Compiler
 
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
+[![Database: SQLite & PostgreSQL](https://img.shields.io/badge/Database-SQLite%20%26%20PostgreSQL-teal.svg)](backend/app/core/database.py)
+[![Tests: 229 Passing](https://img.shields.io/badge/Tests-229%20Passing-brightgreen.svg)](backend/tests/)
+[![Power BI Ready](https://img.shields.io/badge/Analytics-Power%20BI%20Ready-yellow.svg)](reports/generated/)
+[![Excel Scenario Model](https://img.shields.io/badge/Model-Excel%20Scenario%20Model-green.svg)](reports/generated/)
+[![Author: Hriday Singh Sobti](https://img.shields.io/badge/Author-Hriday%20Singh%20Sobti-1E4D6B.svg)](https://github.com/hriday-sobti)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python: 3.11+](https://img.shields.io/badge/Python-3.11%2B-brightgreen.svg)](pyproject.toml)
-[![FastAPI](https://img.shields.io/badge/Framework-FastAPI-teal.svg)](https://fastapi.tiangolo.com)
-[![React: 18/19](https://img.shields.io/badge/Frontend-React%20%7C%20Vite%20%7C%20Tailwind-blue.svg)](frontend/)
-[![BCBS 295 / 238](https://img.shields.io/badge/Regulatory%20Standard-BCBS%20295%20%7C%20238-darkblue.svg)](docs/research/)
+
+**Author**: Hriday Singh Sobti  
+**Stack**: Python 3.10+ | FastAPI | SQLAlchemy 2.0 | React 18 | Tailwind CSS | ECharts | NetworkX  
+**Database**: Dual-Dialect SQLite (Zero-Config Local) & PostgreSQL (Production Engine)  
+**Test Suite**: 229 Passing Tests (Unit, Generative Hypothesis Property, Integration)  
+**Reporting**: Power BI Ready Export Data & Multi-Tab Excel Scenario Model  
 
 > A synthetic bank whose balance-sheet events continuously flow through accounting positions, regulatory classification, liquidity calculations, controls, investigation, reporting, and audit-ready lineage.
 
@@ -213,14 +221,16 @@ liquidity-twin-regulatory-control/
 The test pyramid contains unit, generative property-based, and end-to-end integration tests:
 
 ```bash
-# Execute full pytest suite
+# Execute full 229-test verification suite
 python -m pytest backend/tests -v
+# 229 passed in 3.49s (0 warnings)
 ```
 
+- **100 Automated Control Tests (`test_all_100_controls.py`)**: Tests execution, schema validation, and severity adherence for all 100 individual controls across all 10 operational families.
+- **Parametric Scenario Tests (`test_parameterized_scenarios.py`)**: Tests monotonic response curves over 20 corporate deposit outflow shock tiers (-1% to -20%), 15 loan expansion tiers, 10 term funding tiers, and 10 asset reallocations.
 - **Golden Calculation Tests (`test_calculators.py`)**: Tests calculation precision down to the penny against a hand-verified 10-customer, 15-account dataset.
 - **Property-Based Invariant Tests (`test_properties.py`)**: Uses **Hypothesis** to test balance roll-forwards, non-negativity of weighted factors, and conservation laws across arbitrary inputs.
 - **API Integration Tests (`test_api.py`)**: Tests live HTTP responses, header statuses, scenario simulations, and AI quarantine behavior.
-
 ---
 
 ## 8. Authoritative References & Governance
