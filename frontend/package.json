@@ -1,7 +1,7 @@
 {
   "name": "liquidity-twin-frontend",
   "private": true,
-  "version": "1.0.0",
+  "author": "Hriday Singh Sobti <hridaysobti@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",
