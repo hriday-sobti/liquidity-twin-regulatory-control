@@ -11,17 +11,18 @@
 
 ---
 
-## 1. Executive Overview: Why the System Exists
+## 1. Context and Problem Statement
 
-When a regulatory liquidity number changes on a bank's executive dashboard or supervisory return, financial analysts and treasury controllers face fundamental operational questions:
-- **Why did the metric move?** Which balance-sheet driver or transactional account caused the shift?
-- **Can we trust it?** What automated controls validated the data, and are there open reconciliation breaks?
-- **Where did it come from?** Can we trace every dollar backward to source ledger records and specific Basel regulatory rules?
-- **What happens under stress?** How will ratios behave if wholesale corporate depositors withdraw 8% of balances?
-- **Can we reproduce the reporting output?** Does the published PDF and XLSX reporting pack reconcile cell-by-cell to the underlying database?
+I built this system to solve a practical problem in institutional treasury and financial control: when a regulatory liquidity metric like the Net Stable Funding Ratio (NSFR) or Liquidity Coverage Ratio (LCR) changes between close cycles, tracing that movement back to source ledger transactions is usually a painful, manual process.
 
-**Liquidity Twin** provides a bidirectional financial information system that replaces manual spreadsheets and opaque batch processes with deterministic accounting projection, rule-driven regulatory classification, a continuous 100-control validation engine, a directed acyclic lineage graph, a counterfactual scenario lab, an automated reporting compiler, and a controlled natural-language copilot with strict numeric verification.
+Most institutions rely on disconnected SQL scripts, fragmented subledger dumps, and spreadsheet macros. When auditors or regulators challenge a number, finance teams spend days trying to prove:
+- Which balance-sheet driver moved the ratio?
+- Which underlying accounts and source transactions support that movement?
+- Which specific Basel regulatory rule classified the exposure?
+- Which automated controls validated the data, and were there any reconciliation breaks?
+- What would happen under counterfactual stress?
 
+**Liquidity Twin** approaches this as an engineering problem: an event-driven system where balance-sheet events flow forward into accounting positions, regulatory classifications, and calculated metrics—while maintaining a directed acyclic lineage graph that allows anyone to follow any number backward to its source records.
 ---
 
 ## 2. Core Workflow: Forward & Backward Architecture
@@ -100,20 +101,21 @@ All regulatory calculations are versioned, documented, and conform strictly to o
 - Guaranteed property: $\sum \text{Driver Contributions} = \Delta \text{NSFR}$ within 0.0001 pp.
 
 ### 5. Counterfactual Scenario Lab
-- In-memory temporary balance-sheet projections without mutating the frozen baseline snapshot.
-- Acceptance Test 3 Target: Shocks corporate deposits by **-8.0%**, yielding a stressed NSFR of **113.10%** and identifying cash buffer depletion.
+- In-memory balance-sheet projections that leave baseline snapshots untouched.
+- Allows testing explicit assumptions (e.g., corporate deposit outflows, wholesale debt maturities, loan volume expansions).
+- Evaluates liquidity buffer sensitivity and primary drivers under stressed conditions.
 
-### 6. Shadow Close Orchestration & Late Adjustment
+### 6. Shadow Close Workflow & Late Adjustments
 - 10-stage sequential close workflow (Freeze -> Validate -> Reconcile -> Classify -> Calculate -> Control -> Exceptions -> MI -> Report -> Sign-off).
-- Injects a **$38M Late Adjustment** post-freeze, detects the break, halts stages 5–10, and demands authorized re-execution.
+- Simulates mid-cycle operational disruptions (such as late-clearing corporate funding wires), tracking downstream break propagation and requiring authorized re-execution.
 
-### 7. Controlled Analyst Copilot & Numeric Verifier
-- Natural-language assistant constrained to an allowlist of 10 analytical intents (zero arbitrary SQL execution).
-- **Mandatory Regex & Semantic Numeric Claim Verifier**: Blocked output if any cited percentage, currency value, direction, or driver fails to match database grounding within tolerance.
-- Automated AI Red-Teaming Suite achieving **100.0% Reliability Score** across 8 adversarial test patterns.
+### 7. Controlled Analyst Assistant & Numeric Verification
+- Allowlist-constrained natural-language querying for liquidity analytics (no arbitrary SQL generation).
+- **Strict Numeric Claim Verifier**: Parses generated text for numeric values, percentages, directions, and dates, asserting them against underlying grounded calculations before rendering.
+- Red-team test harness testing for hallucinated metrics, directional inversions, and out-of-scope queries.
 
-### 8. Publication-Grade Reporting Compiler
-- Generates official regulatory PDF packs (ReportLab) and multi-tab Excel workbooks (openpyxl) complete with executive summaries, reconciliation schedules, and reviewer sign-off blocks.
+### 8. Reporting Compiler
+- Automates production of regulatory PDF packs (via ReportLab) and formulaic Excel workbooks (via openpyxl), incorporating balance roll-forwards, reconciliation schedules, and reviewer sign-off blocks.
 
 ---
 

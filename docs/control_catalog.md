@@ -19,7 +19,7 @@
 | **LINEAGE** | 10 | Strict graph acyclicity (DAG), complete backward traversal paths | **10 / 10 PASS** |
 | **SCENARIO** | 10 | Baseline immutability, cash drain conservation, double-entry in stress | **10 / 10 PASS** |
 | **AI OUTPUT** | 10 | Grounding verification, directional claim consistency, SQL rejection | **10 / 10 PASS** |
-| **TOTAL** | **100** | **Comprehensive Financial Control Verification** | **98.0% PASSED** |
+| **TOTAL** | **100** | **Automated Regulatory & Financial Controls** | **98.0% PASSED** |
 
 ---
 
