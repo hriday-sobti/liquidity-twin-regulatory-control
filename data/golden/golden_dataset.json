@@ -1,0 +1,50 @@
+{
+  "dataset_name": "GOLDEN_TEST_DATASET",
+  "dataset_version": "1.0.0",
+  "description": "Deterministic, hand-verified golden dataset for regulatory liquidity calculation verification.",
+  "as_of_date": "2026-09-30",
+  "reporting_currency": "USD",
+  "customers": [
+    { "customer_id": "GOLD-CUST-01", "customer_name": "Retail Individual Alpha", "customer_type": "RETAIL", "country": "USA", "credit_rating": "AA", "relationship_start_date": "2020-01-15" },
+    { "customer_id": "GOLD-CUST-02", "customer_name": "Retail Individual Beta", "customer_type": "RETAIL", "country": "USA", "credit_rating": "A", "relationship_start_date": "2023-05-10" },
+    { "customer_id": "GOLD-CUST-03", "customer_name": "Acme Small Business Corp", "customer_type": "SMALL_BUSINESS", "country": "USA", "credit_rating": "BBB", "relationship_start_date": "2021-03-20" },
+    { "customer_id": "GOLD-CUST-04", "customer_name": "Global Logistics Corp", "customer_type": "NON_FINANCIAL_CORPORATE", "country": "USA", "credit_rating": "A", "relationship_start_date": "2018-11-01" },
+    { "customer_id": "GOLD-CUST-05", "customer_name": "Apex Manufacturing Ltd", "customer_type": "NON_FINANCIAL_CORPORATE", "country": "USA", "credit_rating": "BBB", "relationship_start_date": "2019-08-15" },
+    { "customer_id": "GOLD-CUST-06", "customer_name": "First Commercial Bank", "customer_type": "FINANCIAL_INSTITUTION", "country": "USA", "credit_rating": "AA", "relationship_start_date": "2015-06-01" },
+    { "customer_id": "GOLD-CUST-07", "customer_name": "Metropolitan Interbank Fund", "customer_type": "FINANCIAL_INSTITUTION", "country": "USA", "credit_rating": "A", "relationship_start_date": "2022-02-14" },
+    { "customer_id": "GOLD-CUST-08", "customer_name": "Federal Sovereign Authority", "customer_type": "SOVEREIGN", "country": "USA", "credit_rating": "AAA", "relationship_start_date": "2010-01-01" },
+    { "customer_id": "GOLD-CUST-09", "customer_name": "Regional Public Utility", "customer_type": "PSE", "country": "USA", "credit_rating": "AA", "relationship_start_date": "2017-09-01" },
+    { "customer_id": "GOLD-CUST-10", "customer_name": "Residential Prime Borrower", "customer_type": "RETAIL", "country": "USA", "credit_rating": "AAA", "relationship_start_date": "2021-12-01" }
+  ],
+  "accounts": [
+    { "account_id": "GOLD-ACC-DEP-01", "customer_id": "GOLD-CUST-01", "side": "LIABILITY", "type": "RETAIL_DEMAND", "balance": 10000000.0, "is_insured": true, "is_operational": false, "residual_maturity_days": 1, "asf_factor": 0.95, "expected_asf": 9500000.0 },
+    { "account_id": "GOLD-ACC-DEP-02", "customer_id": "GOLD-CUST-02", "side": "LIABILITY", "type": "RETAIL_DEMAND", "balance": 6000000.0, "is_insured": false, "is_operational": false, "residual_maturity_days": 1, "asf_factor": 0.90, "expected_asf": 5400000.0 },
+    { "account_id": "GOLD-ACC-DEP-03", "customer_id": "GOLD-CUST-03", "side": "LIABILITY", "type": "RETAIL_TERM", "balance": 4000000.0, "is_insured": true, "is_operational": false, "residual_maturity_days": 180, "asf_factor": 0.95, "expected_asf": 3800000.0 },
+    { "account_id": "GOLD-ACC-DEP-04", "customer_id": "GOLD-CUST-04", "side": "LIABILITY", "type": "CORP_OPERATIONAL", "balance": 12000000.0, "is_insured": false, "is_operational": true, "residual_maturity_days": 30, "asf_factor": 0.50, "expected_asf": 6000000.0 },
+    { "account_id": "GOLD-ACC-DEP-05", "customer_id": "GOLD-CUST-05", "side": "LIABILITY", "type": "CORP_NON_OPERATIONAL", "balance": 18000000.0, "is_insured": false, "is_operational": false, "residual_maturity_days": 90, "asf_factor": 0.50, "expected_asf": 9000000.0 },
+    { "account_id": "GOLD-ACC-FND-01", "customer_id": "GOLD-CUST-06", "side": "LIABILITY", "type": "CERTIFICATE_OF_DEPOSIT", "balance": 8000000.0, "is_insured": false, "is_operational": false, "residual_maturity_days": 270, "asf_factor": 0.50, "expected_asf": 4000000.0 },
+    { "account_id": "GOLD-ACC-FND-02", "customer_id": "GOLD-CUST-07", "side": "LIABILITY", "type": "INTERBANK_BORROWING", "balance": 5000000.0, "is_insured": false, "is_operational": false, "residual_maturity_days": 14, "asf_factor": 0.00, "expected_asf": 0.0 },
+    { "account_id": "GOLD-ACC-CAP-01", "customer_id": "GOLD-CUST-08", "side": "EQUITY", "type": "EQUITY_CAPITAL", "balance": 12000000.0, "is_insured": false, "is_operational": false, "residual_maturity_days": 9999, "asf_factor": 1.00, "expected_asf": 12000000.0 },
+    { "account_id": "GOLD-ACC-AST-01", "customer_id": "GOLD-CUST-08", "side": "ASSET", "type": "CASH_CENTRAL_BANK", "balance": 5000000.0, "is_encumbered": false, "residual_maturity_days": 1, "rsf_factor": 0.00, "expected_rsf": 0.0 },
+    { "account_id": "GOLD-ACC-AST-02", "customer_id": "GOLD-CUST-08", "side": "ASSET", "type": "SOVEREIGN_BOND", "balance": 10000000.0, "is_encumbered": false, "residual_maturity_days": 720, "rsf_factor": 0.05, "expected_rsf": 500000.0 },
+    { "account_id": "GOLD-ACC-AST-03", "customer_id": "GOLD-CUST-09", "side": "ASSET", "type": "CORP_BOND_AA", "balance": 4000000.0, "is_encumbered": false, "residual_maturity_days": 1080, "rsf_factor": 0.15, "expected_rsf": 600000.0 },
+    { "account_id": "GOLD-ACC-LON-01", "customer_id": "GOLD-CUST-10", "side": "ASSET", "type": "MORTGAGE_PRIME", "balance": 16000000.0, "is_encumbered": false, "residual_maturity_days": 5400, "rsf_factor": 0.50, "expected_rsf": 8000000.0 },
+    { "account_id": "GOLD-ACC-LON-02", "customer_id": "GOLD-CUST-04", "side": "ASSET", "type": "CORP_SHORT_LOAN", "balance": 8000000.0, "is_encumbered": false, "residual_maturity_days": 180, "rsf_factor": 0.50, "expected_rsf": 4000000.0 },
+    { "account_id": "GOLD-ACC-LON-03", "customer_id": "GOLD-CUST-05", "side": "ASSET", "type": "CORP_TERM_LOAN", "balance": 20000000.0, "is_encumbered": false, "residual_maturity_days": 1095, "rsf_factor": 0.85, "expected_rsf": 17000000.0 },
+    { "account_id": "GOLD-ACC-LON-04", "customer_id": "GOLD-CUST-01", "side": "ASSET", "type": "RETAIL_UNSECURED", "balance": 4000000.0, "is_encumbered": false, "residual_maturity_days": 730, "rsf_factor": 0.85, "expected_rsf": 3400000.0 },
+    { "account_id": "GOLD-ACC-LON-05", "customer_id": "GOLD-CUST-02", "side": "ASSET", "type": "NPL", "balance": 2000000.0, "is_encumbered": false, "residual_maturity_days": 365, "rsf_factor": 1.00, "expected_rsf": 2000000.0 },
+    { "account_id": "GOLD-ACC-AST-04", "customer_id": "GOLD-CUST-08", "side": "ASSET", "type": "FIXED_ASSETS", "balance": 6000000.0, "is_encumbered": false, "residual_maturity_days": 9999, "rsf_factor": 1.00, "expected_rsf": 6000000.0 },
+    { "account_id": "GOLD-ACC-OBS-01", "customer_id": "GOLD-CUST-04", "side": "OFF_BALANCE_SHEET", "type": "CREDIT_LINE", "balance": 10000000.0, "is_encumbered": false, "residual_maturity_days": 365, "rsf_factor": 0.05, "expected_rsf": 500000.0 }
+  ],
+  "expected_totals": {
+    "total_assets": 75000000.0,
+    "total_liabilities_equity": 75000000.0,
+    "accounting_balance_difference": 0.0,
+    "total_asf": 49700000.0,
+    "total_rsf": 42000000.0,
+    "nsfr_percentage": 118.3333,
+    "total_hqla": 18400000.0,
+    "total_net_cash_outflows": 17450000.0,
+    "lcr_percentage": 105.4441
+  }
+}
