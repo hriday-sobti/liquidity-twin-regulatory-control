@@ -29,7 +29,7 @@ app.add_middleware(
 )
 
 # Include API v1 router
-app.include_router(api_v1_router, prefix=settings.API_PREFIX)
+app.include_router(api_v1_router, prefix=settings.normalized_api_prefix)
 
 
 @app.on_event("startup")

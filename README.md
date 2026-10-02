@@ -1,6 +1,8 @@
 # LIQUIDITY TWIN
 ## Regulatory Liquidity Digital Twin, Control Graph and Reporting Compiler
 
+### 📄 [**View the Project Report (PDF)**](reports/generated/Liquidity_Twin_Project_Report.pdf)
+
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
 [![Database: SQLite & PostgreSQL](https://img.shields.io/badge/Database-SQLite%20%26%20PostgreSQL-teal.svg)](backend/app/core/database.py)
 [![Tests: 229 Passing](https://img.shields.io/badge/Tests-229%20Passing-brightgreen.svg)](backend/tests/)
@@ -18,6 +20,18 @@
 > A synthetic bank whose balance-sheet events continuously flow through accounting positions, regulatory classification, liquidity calculations, controls, investigation, reporting, and audit-ready lineage.
 
 ---
+
+## DELIVERABLES
+
+| Deliverable | Direct Action Link | Description |
+| :--- | :--- | :--- |
+| **Analyst Workstation** | [**`[ OPEN DASHBOARD ]`**](http://localhost:5173) | Interactive 11-tab desktop workstation (Overview, Waterfall, Lineage DAG, Scenarios, Controls) |
+| **Project Report** | [**`[ VIEW PROJECT REPORT (PDF) ]`**](reports/generated/Liquidity_Twin_Project_Report.pdf) | 14-page publication document with embedded figures, analytical charts, and maker-checker sign-offs |
+| **Comprehensive Documentation** | [**`[ VIEW DETAILED DOCUMENTATION ]`**](docs/project_report.md) | In-depth 13-section operational specification, chart analysis, and governance reference |
+| **Project Repository** | [**`[ VIEW PROJECT ON GITHUB ]`**](https://github.com/hriday-sobti/liquidity-twin-regulatory-control) | Primary repository containing verified backend, frontend, models, and CI workflows |
+
+---
+
 
 ## 1. Context and Problem Statement
 
@@ -125,9 +139,29 @@ All regulatory calculations are versioned, documented, and conform strictly to o
 ### 8. Reporting Compiler
 - Automates production of regulatory PDF packs (via ReportLab) and formulaic Excel workbooks (via openpyxl), incorporating balance roll-forwards, reconciliation schedules, and reviewer sign-off blocks.
 
+## 5. Dashboard Workstation & Analytical Visuals
+
+The platform provides an analyst command center connecting headline ratios down to raw source events:
+
+### Executive Overview Workstation
+![Executive Overview Workstation](docs/assets/screenshots/01_overview.png)
+*Figure 1: Executive Overview with headline KPIs (NSFR 117.64%, LCR 132.41%), interactive ECharts movement waterfall, and operational inquiry routing.*
+
+### Bidirectional Lineage DAG ("Metric Birth Certificate")
+![Lineage Graph](docs/assets/screenshots/03_lineage_audit.png)
+*Figure 2: Interactive 86-node Directed Acyclic Graph (React Flow) providing full provenance from reported schedule cells down to source transaction slips.*
+
+### Exact Additive Shapley Movement Attribution
+![NSFR Movement Waterfall](docs/assets/charts/02_nsfr_movement_waterfall.png)
+*Figure 3: Shapley two-factor ratio movement decomposition (+0.63 pp) reconciling across underlying balance-sheet drivers with zero residual error.*
+
+### Continuous Automated Control Mesh (100 Checks)
+![Control Mesh](docs/assets/charts/06_controls_mesh.png)
+*Figure 4: 100 continuous automated checks executed across 10 functional families, achieving a verified 98.0% baseline pass rate.*
+
 ---
 
-## 5. Quickstart & How to Run
+## 6. Quickstart & How to Run
 
 ### Prerequisites
 - Python 3.11+
@@ -136,7 +170,7 @@ All regulatory calculations are versioned, documented, and conform strictly to o
 ### 1. Installation & Environment Setup
 ```bash
 # Clone the repository
-git clone https://github.com/synthetic-bank-lab/liquidity-twin-regulatory-control.git
+git clone https://github.com/hriday-sobti/liquidity-twin-regulatory-control.git
 cd liquidity-twin-regulatory-control
 
 # Install backend dependencies
@@ -174,7 +208,7 @@ Open **`http://localhost:5173`** in your browser.
 
 ---
 
-## 6. Project Architecture & Directory Structure
+## 7. Project Architecture & Directory Structure
 
 ```text
 liquidity-twin-regulatory-control/
@@ -216,14 +250,14 @@ liquidity-twin-regulatory-control/
 
 ---
 
-## 7. Testing Strategy & Verification Gates
+## 8. Testing Strategy & Verification Gates
 
 The test pyramid contains unit, generative property-based, and end-to-end integration tests:
 
 ```bash
 # Execute full 229-test verification suite
 python -m pytest backend/tests -v
-# 229 passed in 3.49s (0 warnings)
+# 229 passed (measured during documented local run, 0 warnings)
 ```
 
 - **100 Automated Control Tests (`test_all_100_controls.py`)**: Tests execution, schema validation, and severity adherence for all 100 individual controls across all 10 operational families.
@@ -233,7 +267,7 @@ python -m pytest backend/tests -v
 - **API Integration Tests (`test_api.py`)**: Tests live HTTP responses, header statuses, scenario simulations, and AI quarantine behavior.
 ---
 
-## 8. Authoritative References & Governance
+## 9. Authoritative References & Governance
 
 All regulatory logic is directly grounded in primary supervisory documentation:
 - **BCBS 295**: *Basel III: The Net Stable Funding Ratio* (Bank for International Settlements, October 2014) — [https://www.bis.org/bcbs/publ/d295.htm](https://www.bis.org/bcbs/publ/d295.htm)

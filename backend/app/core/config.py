@@ -33,6 +33,15 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
+    @property
+    def normalized_api_prefix(self) -> str:
+        prefix = self.API_PREFIX.replace("\\", "/")
+        if "api/v1" in prefix:
+            return "/api/v1"
+        if not prefix.startswith("/"):
+            return f"/{prefix}"
+        return prefix
+
 
 @lru_cache
 def get_settings() -> Settings:

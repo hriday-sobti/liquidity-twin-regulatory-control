@@ -21,8 +21,27 @@ import {
 } from './services/api';
 import { FileDown, CheckCircle2 } from 'lucide-react';
 
+const VALID_SECTIONS: SectionKey[] = [
+  'overview', 'movement', 'lineage', 'scenario', 'close', 
+  'controls', 'reports', 'queries', 'copilot', 'replay', 'benchmark'
+];
+
+function getInitialSection(): SectionKey {
+  const hash = window.location.hash.replace(/^#\/?/, '') as SectionKey;
+  if (VALID_SECTIONS.includes(hash)) {
+    return hash;
+  }
+  return 'overview';
+}
+
 export default function App() {
-  const [section, setSection] = useState<SectionKey>('overview');
+  const [section, setSectionState] = useState<SectionKey>(getInitialSection);
+  
+  const setSection = (newSec: SectionKey) => {
+    window.location.hash = newSec;
+    setSectionState(newSec);
+  };
+
   const [overview, setOverview] = useState<OverviewData | null>(null);
   const [controlsData, setControlsData] = useState<any[]>([]);
   const [closeStatus, setCloseStatus] = useState<any>(null);
@@ -60,6 +79,17 @@ export default function App() {
   useEffect(() => {
     loadAll();
   }, []);
+  useEffect(() => {
+    const handleHash = () => {
+      const h = window.location.hash.replace(/^#\/?/, '') as SectionKey;
+      if (VALID_SECTIONS.includes(h)) {
+        setSectionState(h);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
 
   const handleAdvanceStep = async (stepNum: number) => {
     try {

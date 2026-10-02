@@ -28,8 +28,9 @@ wheels/
 
 # Databases & local state
 *.db
+*.db-shm
+*.db-wal
 *.sqlite3
-
 # Node / Frontend
 frontend/node_modules/
 frontend/dist/
@@ -39,6 +40,6 @@ frontend/dist/
 # Reports
 reports/generated/*
 !reports/generated/.gitkeep
-
+!reports/generated/Liquidity_Twin_Project_Report.pdf
 # Environments
 .env
